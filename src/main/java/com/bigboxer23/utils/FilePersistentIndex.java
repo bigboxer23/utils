@@ -24,7 +24,7 @@ public class FilePersistentIndex
 		this.filePath = System.getProperty("user.dir") + File.separator + fileName;
 		try
 		{
-			currentIndex = Integer.parseInt(FileUtils.readFileToString(new File(this.filePath), Charset.defaultCharset()));
+			currentIndex = Integer.parseInt(FileUtils.readFileToString(new File(this.filePath), Charset.defaultCharset()).trim());
 		} catch (NumberFormatException e)
 		{
 			logger.warn("FilePersistentIndex", e);
