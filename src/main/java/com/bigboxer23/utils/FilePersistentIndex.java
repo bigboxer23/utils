@@ -13,6 +13,8 @@ import java.nio.charset.Charset;
  */
 public class FilePersistentIndex
 {
+	public static final String kPrefix = ".index_";
+
 	private static final Logger logger = LoggerFactory.getLogger(FilePersistentIndex.class);
 
 	private int currentIndex = -1;
@@ -22,14 +24,28 @@ public class FilePersistentIndex
 	public FilePersistentIndex(String fileName)
 	{
 		this.filePath = System.getProperty("user.dir") + File.separator + fileName;
+		currentIndex = getIndexFromFile(this.filePath);
+		if (currentIndex > -1)
+		{
+			new File(this.filePath).delete();
+			this.filePath = System.getProperty("user.dir") + File.separator + kPrefix + fileName;
+			writeToFile();
+		}
+		this.filePath = System.getProperty("user.dir") + File.separator + kPrefix + fileName;
+		currentIndex = getIndexFromFile(this.filePath);
+		logger.info(fileName + ": initialized with value " + currentIndex);
+	}
+
+	private static int getIndexFromFile(String path)
+	{
 		try
 		{
-			currentIndex = Integer.parseInt(FileUtils.readFileToString(new File(this.filePath), Charset.defaultCharset()).trim());
+			return Integer.parseInt(FileUtils.readFileToString(new File(path), Charset.defaultCharset()).trim());
 		} catch (NumberFormatException e)
 		{
 			logger.warn("FilePersistentIndex", e);
 		} catch (IOException e) {}
-		logger.info(fileName + ": initialized with value " + currentIndex);
+		return -1;
 	}
 
 	private void writeToFile()
