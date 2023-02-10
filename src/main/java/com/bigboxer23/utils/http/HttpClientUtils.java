@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -63,6 +65,7 @@ public class HttpClientUtils {
 							.setConnectTimeout(5000)
 							.setConnectionRequestTimeout(5000)
 							.setSocketTimeout(5000)
+							.setCookieSpec(CookieSpecs.IGNORE_COOKIES)
 							.build())
 					.evictExpiredConnections()
 					.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
