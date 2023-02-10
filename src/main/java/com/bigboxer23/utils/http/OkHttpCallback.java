@@ -4,6 +4,7 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,10 +20,9 @@ public class OkHttpCallback implements Callback {
 	@Override
 	public void onResponse(Call call, Response response) throws IOException {
 		if (!response.isSuccessful()) {
-			throw new IOException("call to "
-					+ call.request().url().url()
-					+ " failed. "
-					+ response.body().string());
+			try (ResponseBody body = response.body()) {
+				throw new IOException("call to " + call.request().url().url() + " failed. " + body.string());
+			}
 		}
 	}
 }
