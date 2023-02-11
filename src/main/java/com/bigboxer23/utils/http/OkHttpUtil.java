@@ -51,6 +51,12 @@ public class OkHttpUtil {
 				.build());
 	}
 
+	public static Response deleteSynchronous(String url, RequestBuilderCallback builderCallback) throws IOException {
+		return client.newCall(runBuilderCallback(new Request.Builder().url(url).delete(), builderCallback)
+						.build())
+				.execute();
+	}
+
 	private static Request.Builder runBuilderCallback(Request.Builder builder, RequestBuilderCallback builderCallback) {
 		return Optional.ofNullable(builderCallback).orElse(builder1 -> builder1).modifyBuilder(builder);
 	}
