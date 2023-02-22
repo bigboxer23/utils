@@ -18,11 +18,22 @@ public class OkHttpCallback implements Callback {
 	}
 
 	@Override
-	public void onResponse(Call call, Response response) throws IOException {
-		if (!response.isSuccessful()) {
-			try (ResponseBody body = response.body()) {
+	public final void onResponse(Call call, Response response) throws IOException {
+		try (ResponseBody body = response.body()) {
+			if (!response.isSuccessful()) {
 				throw new IOException("call to " + call.request().url().url() + " failed. " + body.string());
 			}
+			onResponseBody(call, body);
 		}
+	}
+
+	/**
+	 * Stub so can do things with body, automatically deal w/closing body
+	 *
+	 * @param call
+	 * @param responseBody
+	 */
+	public void onResponseBody(Call call, ResponseBody responseBody) {
+		// Stub
 	}
 }
