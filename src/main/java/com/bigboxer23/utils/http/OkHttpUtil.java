@@ -51,10 +51,34 @@ public class OkHttpUtil {
 				.build());
 	}
 
+	public static void delete(String url, Callback callback, RequestBuilderCallback builderCallback)
+			throws IOException {
+		deleteCall(url, builderCallback).enqueue(callback);
+	}
+
 	public static Response deleteSynchronous(String url, RequestBuilderCallback builderCallback) throws IOException {
+		return deleteCall(url, builderCallback).execute();
+	}
+
+	private static Call deleteCall(String url, RequestBuilderCallback builderCallback) {
 		return client.newCall(runBuilderCallback(new Request.Builder().url(url).delete(), builderCallback)
-						.build())
-				.execute();
+				.build());
+	}
+
+	public static void put(String url, Callback callback, RequestBuilderCallback builderCallback) {
+		putCall(url, null, builderCallback).enqueue(callback);
+	}
+
+	public static Response putSynchronous(String url, RequestBody body, RequestBuilderCallback builderCallback)
+			throws IOException {
+		return putCall(url, body, builderCallback).execute();
+	}
+
+	private static Call putCall(String url, RequestBody body, RequestBuilderCallback builderCallback) {
+		return client.newCall(runBuilderCallback(
+				new Request.Builder().url(url).put(body == null ? RequestBody.create(new byte[0]) : body),
+				builderCallback)
+				.build());
 	}
 
 	private static Request.Builder runBuilderCallback(Request.Builder builder, RequestBuilderCallback builderCallback) {
