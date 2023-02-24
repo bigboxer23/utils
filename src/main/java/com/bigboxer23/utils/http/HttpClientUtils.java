@@ -24,6 +24,7 @@ public class HttpClientUtils {
 
 	private static CloseableHttpClient myHttpClient;
 
+	@Deprecated
 	public static String execute(HttpRequestBase theRequestBase) {
 		myLogger.debug("executing " + theRequestBase.getURI());
 		try (CloseableHttpResponse aResponse = HttpClientUtils.getInstance().execute(theRequestBase)) {

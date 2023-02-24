@@ -35,5 +35,14 @@ public class OkHttpCallback implements Callback {
 	 */
 	public void onResponseBody(Call call, ResponseBody responseBody) {
 		// Stub
+		try {
+			onResponseBodyString(call, responseBody.string());
+		} catch (IOException e) {
+			logger.warn("onResponseBody: ", e);
+		}
+	}
+
+	public void onResponseBodyString(Call call, String stringBody) {
+		// Stub
 	}
 }
