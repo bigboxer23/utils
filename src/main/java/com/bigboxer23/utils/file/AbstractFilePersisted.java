@@ -29,10 +29,12 @@ public abstract class AbstractFilePersisted {
 
 	protected String getStringFromFile() {
 		try {
-			return FileUtils.readFileToString(new File(this.filePath), Charset.defaultCharset())
-					.trim();
+			return new File(this.filePath).exists()
+					? FileUtils.readFileToString(new File(this.filePath), Charset.defaultCharset())
+							.trim()
+					: "";
 		} catch (IOException e) {
-			logger.warn("AbstractFilePersisted", e);
+			logger.warn("AbstractFilePersisted:", e);
 		}
 		return "";
 	}
