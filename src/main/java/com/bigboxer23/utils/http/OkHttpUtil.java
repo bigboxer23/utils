@@ -8,10 +8,10 @@ import okhttp3.*;
 /** */
 public class OkHttpUtil {
 	private static final OkHttpClient client = new OkHttpClient.Builder()
-			.connectTimeout(1, TimeUnit.MINUTES)
-			.writeTimeout(1, TimeUnit.MINUTES)
-			.readTimeout(1, TimeUnit.MINUTES)
-			.callTimeout(1, TimeUnit.MINUTES)
+			.connectTimeout(3, TimeUnit.MINUTES)
+			.writeTimeout(3, TimeUnit.MINUTES)
+			.readTimeout(3, TimeUnit.MINUTES)
+			.callTimeout(3, TimeUnit.MINUTES)
 			.build();
 
 	public static void get(String url, Callback callback) {
