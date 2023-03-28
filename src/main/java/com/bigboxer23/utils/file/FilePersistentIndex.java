@@ -12,7 +12,8 @@ public class FilePersistentIndex extends AbstractFilePersisted {
 
 	private int getIndexFromFile() {
 		try {
-			return Integer.parseInt(getStringFromFile());
+			String fileContent = getStringFromFile();
+			return fileContent.isEmpty() ? -1 : Integer.parseInt(getStringFromFile());
 		} catch (NumberFormatException e) {
 			logger.warn("FilePersistentIndex:", e);
 		}
