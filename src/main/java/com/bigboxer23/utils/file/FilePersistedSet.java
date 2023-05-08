@@ -9,7 +9,7 @@ import java.util.Set;
 public class FilePersistedSet extends AbstractFilePersisted {
 	private Set<String> set;
 
-	protected FilePersistedSet(String fileName) {
+	public FilePersistedSet(String fileName) {
 		super(fileName);
 		initSetFromFile();
 		logger.info(fileName + ": initialized with values " + set.size());
