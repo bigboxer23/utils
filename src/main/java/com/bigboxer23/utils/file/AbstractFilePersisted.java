@@ -16,15 +16,28 @@ public abstract class AbstractFilePersisted {
 	protected static final Logger logger = LoggerFactory.getLogger(AbstractFilePersisted.class);
 
 	protected AbstractFilePersisted(String fileName) {
-		this.filePath = System.getProperty("user.dir") + File.separator + kPrefix + fileName;
+		filePath = System.getProperty("user.dir") + File.separator + kPrefix + fileName;
 	}
 
 	protected void writeToFile(Object objectToWrite) {
 		try {
-			FileUtils.writeStringToFile(new File(this.filePath), objectToWrite + "", Charset.defaultCharset(), false);
+			FileUtils.writeStringToFile(
+					new File(filePath), objectToWrite + (append() ? "\n" : ""), Charset.defaultCharset(), append());
 		} catch (IOException e) {
 			logger.warn("FilePersistentIndex:writeToFile", e);
 		}
+	}
+
+	protected boolean append() {
+		return false;
+	}
+
+	/*protected boolean trim() {
+		return true;
+	}*/
+
+	protected void resetFile() {
+		new File(filePath).delete();
 	}
 
 	protected String getStringFromFile() {
