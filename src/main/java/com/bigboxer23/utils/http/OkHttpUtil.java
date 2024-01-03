@@ -7,44 +7,68 @@ import okhttp3.*;
 
 /** */
 public class OkHttpUtil {
-	private static final OkHttpClient client = new OkHttpClient.Builder()
-			.connectTimeout(3, TimeUnit.MINUTES)
-			.writeTimeout(3, TimeUnit.MINUTES)
-			.readTimeout(3, TimeUnit.MINUTES)
-			.callTimeout(3, TimeUnit.MINUTES)
-			.build();
+	private static OkHttpClient defaultClient = getBuilder().build();
+
+	public static OkHttpClient.Builder getBuilder() {
+		return new OkHttpClient.Builder()
+				.connectTimeout(3, TimeUnit.MINUTES)
+				.writeTimeout(3, TimeUnit.MINUTES)
+				.readTimeout(3, TimeUnit.MINUTES)
+				.callTimeout(3, TimeUnit.MINUTES);
+	}
 
 	public static void get(String url, Callback callback) {
-		getCall(url, null).enqueue(callback);
+		get(url, callback, null, defaultClient);
+	}
+
+	public static void get(String url, Callback callback, OkHttpClient client) {
+		getCall(url, null, client).enqueue(callback);
 	}
 
 	public static void get(String url, Callback callback, RequestBuilderCallback builderCallback) {
-		getCall(url, builderCallback).enqueue(callback);
+		get(url, callback, builderCallback, defaultClient);
+	}
+
+	public static void get(String url, Callback callback, RequestBuilderCallback builderCallback, OkHttpClient client) {
+		getCall(url, builderCallback, client).enqueue(callback);
 	}
 
 	public static Response getSynchronous(String url, RequestBuilderCallback builderCallback) throws IOException {
-		return getCall(url, builderCallback).execute();
+		return getSynchronous(url, builderCallback, defaultClient);
 	}
 
-	private static Call getCall(String url, RequestBuilderCallback builderCallback) {
+	public static Response getSynchronous(String url, RequestBuilderCallback builderCallback, OkHttpClient client) throws IOException {
+		return getCall(url, builderCallback, client).execute();
+	}
+
+	private static Call getCall(String url, RequestBuilderCallback builderCallback, OkHttpClient client) {
 		return client.newCall(runBuilderCallback(new Request.Builder().url(url).get(), builderCallback)
 				.build());
 	}
 
 	public static void post(String url, Callback callback) {
-		postCall(url, null, null).enqueue(callback);
+		post(url, callback, null, defaultClient);
 	}
 
 	public static void post(String url, Callback callback, RequestBuilderCallback builderCallback) {
-		postCall(url, null, builderCallback).enqueue(callback);
+		post(url, callback, builderCallback, defaultClient);
+	}
+
+	public static void post(String url, Callback callback, RequestBuilderCallback builderCallback, OkHttpClient client) {
+		postCall(url, null, builderCallback, client).enqueue(callback);
 	}
 
 	public static Response postSynchronous(String url, RequestBody body, RequestBuilderCallback builderCallback)
 			throws IOException {
-		return postCall(url, body, builderCallback).execute();
+		return postSynchronous(url, body, builderCallback, defaultClient);
 	}
 
-	private static Call postCall(String url, RequestBody body, RequestBuilderCallback builderCallback) {
+	public static Response postSynchronous(String url, RequestBody body, RequestBuilderCallback builderCallback, OkHttpClient client)
+			throws IOException {
+		return postCall(url, body, builderCallback, client).execute();
+	}
+
+	private static Call postCall(String url, RequestBody body, RequestBuilderCallback builderCallback, OkHttpClient client) {
 		return client.newCall(runBuilderCallback(
 						new Request.Builder().url(url).post(body == null ? RequestBody.create(new byte[0]) : body),
 						builderCallback)
@@ -53,28 +77,46 @@ public class OkHttpUtil {
 
 	public static void delete(String url, Callback callback, RequestBuilderCallback builderCallback)
 			throws IOException {
-		deleteCall(url, builderCallback).enqueue(callback);
+		delete(url, callback, builderCallback, defaultClient);
+	}
+
+	public static void delete(String url, Callback callback, RequestBuilderCallback builderCallback, OkHttpClient client)
+			throws IOException {
+		deleteCall(url, builderCallback, client).enqueue(callback);
 	}
 
 	public static Response deleteSynchronous(String url, RequestBuilderCallback builderCallback) throws IOException {
-		return deleteCall(url, builderCallback).execute();
+		return deleteSynchronous(url, builderCallback, defaultClient);
 	}
 
-	private static Call deleteCall(String url, RequestBuilderCallback builderCallback) {
+	public static Response deleteSynchronous(String url, RequestBuilderCallback builderCallback, OkHttpClient client) throws IOException {
+		return deleteCall(url, builderCallback, client).execute();
+	}
+
+	private static Call deleteCall(String url, RequestBuilderCallback builderCallback, OkHttpClient client) {
 		return client.newCall(runBuilderCallback(new Request.Builder().url(url).delete(), builderCallback)
 				.build());
 	}
 
 	public static void put(String url, Callback callback, RequestBuilderCallback builderCallback) {
-		putCall(url, null, builderCallback).enqueue(callback);
+		put(url, callback, builderCallback, defaultClient);
+	}
+
+	public static void put(String url, Callback callback, RequestBuilderCallback builderCallback, OkHttpClient client) {
+		putCall(url, null, builderCallback, client).enqueue(callback);
 	}
 
 	public static Response putSynchronous(String url, RequestBody body, RequestBuilderCallback builderCallback)
 			throws IOException {
-		return putCall(url, body, builderCallback).execute();
+		return putSynchronous(url, body, builderCallback, defaultClient);
 	}
 
-	private static Call putCall(String url, RequestBody body, RequestBuilderCallback builderCallback) {
+	public static Response putSynchronous(String url, RequestBody body, RequestBuilderCallback builderCallback, OkHttpClient client)
+			throws IOException {
+		return putCall(url, body, builderCallback, client).execute();
+	}
+
+	private static Call putCall(String url, RequestBody body, RequestBuilderCallback builderCallback, OkHttpClient client) {
 		return client.newCall(runBuilderCallback(
 						new Request.Builder().url(url).put(body == null ? RequestBody.create(new byte[0]) : body),
 						builderCallback)
