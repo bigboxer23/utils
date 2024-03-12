@@ -1,5 +1,6 @@
 package com.bigboxer23.utils.http;
 
+import com.squareup.moshi.Moshi;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -7,7 +8,9 @@ import okhttp3.*;
 
 /** */
 public class OkHttpUtil {
-	private static OkHttpClient defaultClient = getBuilder().build();
+	private static final OkHttpClient defaultClient = getBuilder().build();
+
+	private static Moshi moshi;
 
 	public static OkHttpClient.Builder getBuilder() {
 		return new OkHttpClient.Builder()
@@ -135,7 +138,7 @@ public class OkHttpUtil {
 		return Optional.ofNullable(builderCallback).orElse(builder1 -> builder1).modifyBuilder(builder);
 	}
 
-	public Optional<String> getBody(Response response) {
+	public static Optional<String> getBody(Response response) {
 		ResponseBody body = response.body();
 		if (body == null) {
 			return Optional.empty();
@@ -145,5 +148,24 @@ public class OkHttpUtil {
 		} catch (IOException theE) {
 			return Optional.empty();
 		}
+	}
+
+	public static <T> Optional<T> getBody(Response response, Class<T> clazz) {
+		Optional<String> body = getBody(response);
+		if (!body.isPresent()) {
+			return Optional.empty();
+		}
+		try {
+			return Optional.ofNullable(getMoshi().adapter(clazz).fromJson(body.get()));
+		} catch (IOException theE) {
+			return Optional.empty();
+		}
+	}
+
+	private static Moshi getMoshi() {
+		if (moshi == null) {
+			moshi = new Moshi.Builder().build();
+		}
+		return moshi;
 	}
 }
