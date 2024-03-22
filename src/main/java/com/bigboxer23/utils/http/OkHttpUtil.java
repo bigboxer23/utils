@@ -5,9 +5,13 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** */
 public class OkHttpUtil {
+	private static final Logger logger = LoggerFactory.getLogger(OkHttpUtil.class);
+
 	private static final OkHttpClient defaultClient = getBuilder().build();
 
 	private static Moshi moshi;
@@ -140,6 +144,9 @@ public class OkHttpUtil {
 
 	public static Optional<String> getBody(Response response) {
 		ResponseBody body = response.body();
+		if (!response.isSuccessful()) {
+			logger.error("request not successful: " + response.code());
+		}
 		if (body == null) {
 			return Optional.empty();
 		}
@@ -153,11 +160,16 @@ public class OkHttpUtil {
 	public static <T> Optional<T> getBody(Response response, Class<T> clazz) {
 		Optional<String> body = getBody(response);
 		if (!body.isPresent()) {
+			logger.error("empty body");
 			return Optional.empty();
+		}
+		if (!response.isSuccessful()) {
+			logger.error("request not successful body: " + body.get());
 		}
 		try {
 			return Optional.ofNullable(getMoshi().adapter(clazz).fromJson(body.get()));
-		} catch (IOException theE) {
+		} catch (IOException e) {
+			logger.error("getBody: ", e);
 			return Optional.empty();
 		}
 	}
