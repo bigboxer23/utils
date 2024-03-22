@@ -165,6 +165,7 @@ public class OkHttpUtil {
 		}
 		if (!response.isSuccessful()) {
 			logger.error("request not successful body: " + body.get());
+			return Optional.empty();
 		}
 		try {
 			return Optional.ofNullable(getMoshi().adapter(clazz).fromJson(body.get()));
