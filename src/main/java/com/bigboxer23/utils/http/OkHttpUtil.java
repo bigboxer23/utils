@@ -174,6 +174,14 @@ public class OkHttpUtil {
 		}
 	}
 
+	public static <T> T getNonEmptyBody(Response response, Class<T> clazz) throws IOException {
+		Optional<T> responseBody = getBody(response, clazz);
+		if (!responseBody.isPresent()) {
+			throw new IOException("getBodyChecked: " + response.code() + " " + response.message());
+		}
+		return responseBody.get();
+	}
+
 	private static Moshi getMoshi() {
 		if (moshi == null) {
 			moshi = new Moshi.Builder().build();
