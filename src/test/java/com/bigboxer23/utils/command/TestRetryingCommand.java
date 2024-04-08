@@ -75,7 +75,8 @@ public class TestRetryingCommand {
 						throw new IOException("bad");
 					},
 					"test",
-					0, 3);
+					0,
+					3);
 			fail();
 		} catch (IOException e) {
 			assertEquals(4, countHolder[0]);
