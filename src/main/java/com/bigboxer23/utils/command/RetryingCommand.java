@@ -9,7 +9,8 @@ public class RetryingCommand {
 	private static final Logger logger = LoggerFactory.getLogger(RetryingCommand.class);
 
 	/**
-	 * Run a command and retry it after a pause. Can define pause length in seconds, and number of retry attempts
+	 * Run a command and retry it after a pause. Can define pause length in seconds, and number of
+	 * retry attempts
 	 *
 	 * @param command command to run
 	 * @param identifier identifier to log on failures
