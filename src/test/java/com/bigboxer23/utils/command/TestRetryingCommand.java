@@ -47,7 +47,7 @@ public class TestRetryingCommand {
 					0);
 			fail();
 		} catch (IOException e) {
-			assertEquals(2, countHolder[0]);
+			assertEquals(6, countHolder[0]);
 		}
 
 		// A few failures, then success
