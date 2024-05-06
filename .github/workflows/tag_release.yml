@@ -4,7 +4,7 @@ name: Tag Release
 on:
   push:
     tags:
-      - "v*"
+      - "v*.*.*"
 
 jobs:
   tagged-release:
@@ -17,8 +17,9 @@ jobs:
         run: |
           echo "done!"
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - uses: softprops/action-gh-release@v2
         with:
+          token: "${{ secrets.PAT }}"
           repo_token: "${{ secrets.PAT }}"
           prerelease: false
           files: |
