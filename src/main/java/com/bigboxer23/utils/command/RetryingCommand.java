@@ -56,7 +56,7 @@ public class RetryingCommand {
 	 * @throws IOException
 	 */
 	public static <T> T execute(Command<T> command, String identifier, long waitInSeconds) throws IOException {
-		return execute(command, identifier, waitInSeconds, 1);
+		return execute(command, identifier, waitInSeconds, 5);
 	}
 
 	/**
@@ -69,6 +69,6 @@ public class RetryingCommand {
 	 * @throws IOException
 	 */
 	public static <T> T execute(Command<T> command, String identifier) throws IOException {
-		return execute(command, identifier, 5);
+		return execute(command, identifier, 10);
 	}
 }
