@@ -4,7 +4,7 @@ package com.bigboxer23.utils.file;
 public class FilePersistedBoolean extends AbstractFilePersisted {
 	private boolean persisted = false;
 
-	protected FilePersistedBoolean(String fileName) {
+	public FilePersistedBoolean(String fileName) {
 		super(fileName);
 		persisted = getBooleanFromFile();
 		logger.info(fileName + ": initialized with value " + persisted);
