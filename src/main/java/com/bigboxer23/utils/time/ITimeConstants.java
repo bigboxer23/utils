@@ -1,10 +1,7 @@
 package com.bigboxer23.utils.time;
 
-/**
- *
- */
-public interface ITimeConstants
-{
+/** */
+public interface ITimeConstants {
 	public static final long MINUTE = 1000 * 60;
 
 	public static final long FIFTEEN_MINUTES = MINUTE * 15;
