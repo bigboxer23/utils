@@ -183,7 +183,7 @@ public class OkHttpUtil {
 		return responseBody.get();
 	}
 
-	private static Moshi getMoshi() {
+	public static Moshi getMoshi() {
 		if (moshi == null) {
 			moshi = new Moshi.Builder().build();
 		}
