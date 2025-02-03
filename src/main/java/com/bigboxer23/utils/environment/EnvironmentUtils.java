@@ -1,10 +1,7 @@
 package com.bigboxer23.utils.environment;
 
-/**
- *
- */
-public class EnvironmentUtils
-{
+/** */
+public class EnvironmentUtils {
 	public static float celciusToFahrenheit(float celcius) {
 		return (celcius * 1.8f) + 32f;
 	}
