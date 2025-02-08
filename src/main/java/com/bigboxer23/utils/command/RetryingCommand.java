@@ -24,7 +24,7 @@ public class RetryingCommand {
 			Command<T> command, String identifier, long waitInSeconds, int numberOfRetriesBeforeFailure)
 			throws IOException {
 		try {
-			logger.info("Starting command " + identifier);
+			logger.debug("Starting command " + identifier);
 			return command.execute();
 		} catch (IOException e) {
 			for (int ai = 0; ai < numberOfRetriesBeforeFailure; ai++) {
