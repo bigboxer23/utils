@@ -21,7 +21,11 @@ public class RetryingCommand {
 	 * @throws IOException
 	 */
 	public static <T> T execute(
-			Command<T> command, String identifier, long waitInSeconds, int numberOfRetriesBeforeFailure)
+			Command<T> command,
+			String identifier,
+			long waitInSeconds,
+			int numberOfRetriesBeforeFailure,
+			Command<Void> failureCommand)
 			throws IOException {
 		try {
 			logger.debug("Starting command " + identifier);
@@ -39,6 +43,9 @@ public class RetryingCommand {
 					}
 				} catch (InterruptedException e2) {
 					logger.error("error retrying command " + identifier, e2);
+					if (failureCommand != null) {
+						failureCommand.execute();
+					}
 				}
 			}
 		}
@@ -55,8 +62,9 @@ public class RetryingCommand {
 	 * @param <T>
 	 * @throws IOException
 	 */
-	public static <T> T execute(Command<T> command, String identifier, long waitInSeconds) throws IOException {
-		return execute(command, identifier, waitInSeconds, 5);
+	public static <T> T execute(Command<T> command, String identifier, long waitInSeconds, Command<Void> failureCommand)
+			throws IOException {
+		return execute(command, identifier, waitInSeconds, 5, failureCommand);
 	}
 
 	/**
@@ -69,6 +77,11 @@ public class RetryingCommand {
 	 * @throws IOException
 	 */
 	public static <T> T execute(Command<T> command, String identifier) throws IOException {
-		return execute(command, identifier, 10);
+		return execute(command, identifier, 10, null);
+	}
+
+	public static <T> T execute(Command<T> command, String identifier, Command<Void> failureCommand)
+			throws IOException {
+		return execute(command, identifier, 10, 5, failureCommand);
 	}
 }

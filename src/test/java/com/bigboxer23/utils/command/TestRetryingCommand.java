@@ -32,7 +32,8 @@ public class TestRetryingCommand {
 					return null;
 				},
 				"test",
-				0);
+				0,
+				null);
 		assertEquals(2, countHolder[0]);
 
 		// All failure, then exception
@@ -44,7 +45,8 @@ public class TestRetryingCommand {
 						throw new IOException("bad");
 					},
 					"test",
-					0);
+					0,
+					null);
 			fail();
 		} catch (IOException e) {
 			assertEquals(6, countHolder[0]);
@@ -63,7 +65,8 @@ public class TestRetryingCommand {
 				},
 				"test",
 				0,
-				3);
+				3,
+				null);
 		assertEquals(3, countHolder[0]);
 
 		// All failure, then exception
@@ -76,7 +79,8 @@ public class TestRetryingCommand {
 					},
 					"test",
 					0,
-					3);
+					3,
+					null);
 			fail();
 		} catch (IOException e) {
 			assertEquals(4, countHolder[0]);
