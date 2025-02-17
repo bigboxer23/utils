@@ -1,5 +1,6 @@
 package com.bigboxer23.utils.command;
 
+import com.bigboxer23.utils.logging.LoggingUtil;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,8 @@ public class RetryingCommand {
 					}
 				}
 			}
+		} finally {
+			LoggingUtil.clearDeviceId();
 		}
 		return null;
 	}
@@ -83,5 +86,11 @@ public class RetryingCommand {
 	public static <T> T execute(Command<T> command, String identifier, Command<Void> failureCommand)
 			throws IOException {
 		return execute(command, identifier, 10, 5, failureCommand);
+	}
+
+	public static <T> T execute(Command<T> command, String actionVerb, String deviceId, Command<Void> failureCommand)
+			throws IOException {
+		LoggingUtil.addDeviceId(deviceId);
+		return execute(command, actionVerb + " " + deviceId, 10, 5, failureCommand);
 	}
 }
