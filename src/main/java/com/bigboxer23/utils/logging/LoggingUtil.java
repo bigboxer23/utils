@@ -33,6 +33,10 @@ public class LoggingUtil {
 		return MDC.putCloseable("co2", "" + co2);
 	}
 
+	public static MDC.MDCCloseable addCommand(String command) {
+		return MDC.putCloseable("command", command);
+	}
+
 	public static MDC.MDCCloseable addMethod(String method) {
 		return MDC.putCloseable("method", method);
 	}
