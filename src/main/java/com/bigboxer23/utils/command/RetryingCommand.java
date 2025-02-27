@@ -55,42 +55,7 @@ public class RetryingCommand {
 		return null;
 	}
 
-	/**
-	 * Run a command and retry it after a pause. Can define pause length in seconds. Will retry once
-	 *
-	 * @param command command to run
-	 * @param identifier identifier to log on failures
-	 * @param waitInSeconds number of seconds to pause
-	 * @return Command's return value
-	 * @param <T>
-	 * @throws IOException
-	 */
-	public static <T> T execute(Command<T> command, String identifier, long waitInSeconds, Command<Void> failureCommand)
-			throws IOException {
-		return execute(command, identifier, waitInSeconds, 5, failureCommand);
-	}
-
-	/**
-	 * Run a command and retry it after a 5-second pause. Will retry once
-	 *
-	 * @param command command to run
-	 * @param identifier identifier to log on failures
-	 * @return Command's return value
-	 * @param <T>
-	 * @throws IOException
-	 */
-	public static <T> T execute(Command<T> command, String identifier) throws IOException {
-		return execute(command, identifier, 10, null);
-	}
-
-	public static <T> T execute(Command<T> command, String identifier, Command<Void> failureCommand)
-			throws IOException {
-		return execute(command, identifier, 10, 5, failureCommand);
-	}
-
-	public static <T> T execute(Command<T> command, String actionVerb, String deviceId, Command<Void> failureCommand)
-			throws IOException {
-		LoggingUtil.addDeviceId(deviceId);
-		return execute(command, actionVerb + " " + deviceId, 10, 5, failureCommand);
+	public static RetryingCommandBuilder builder() {
+		return new RetryingCommandBuilder();
 	}
 }
