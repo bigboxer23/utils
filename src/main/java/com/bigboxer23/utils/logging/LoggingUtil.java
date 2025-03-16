@@ -1,11 +1,11 @@
 package com.bigboxer23.utils.logging;
 
-import java.io.Closeable;
+import java.util.UUID;
 import org.slf4j.MDC;
 
 /** */
 public class LoggingUtil {
-	public static Closeable addDeviceId(String deviceId) {
+	public static MDC.MDCCloseable addDeviceId(String deviceId) {
 		return MDC.putCloseable("deviceId", deviceId);
 	}
 
@@ -13,28 +13,32 @@ public class LoggingUtil {
 		MDC.remove("deviceId");
 	}
 
-	public static Closeable addTemperature(float temperature) {
+	public static MDC.MDCCloseable addTemperature(float temperature) {
 		return MDC.putCloseable("temperature", "" + temperature);
 	}
 
-	public static Closeable addWatts(float watts) {
+	public static MDC.MDCCloseable addWatts(float watts) {
 		return MDC.putCloseable("watts", "" + watts);
 	}
 
-	public static Closeable addHumidity(int humidity) {
+	public static MDC.MDCCloseable addHumidity(int humidity) {
 		return MDC.putCloseable("humidity", "" + humidity);
 	}
 
-	public static Closeable addCO2(int co2) {
+	public static MDC.MDCCloseable addCO2(int co2) {
 		return MDC.putCloseable("co2", "" + co2);
 	}
 
-	public static Closeable addCommand(String command) {
+	public static MDC.MDCCloseable addCommand(String command) {
 		return MDC.putCloseable("command", command);
 	}
 
-	public static Closeable addMethod(String method) {
+	public static MDC.MDCCloseable addMethod(String method) {
 		return MDC.putCloseable("method", method);
+	}
+
+	public static MDC.MDCCloseable addTraceId() {
+		return MDC.putCloseable("traceId", UUID.randomUUID().toString());
 	}
 
 	public static void clearContext() {

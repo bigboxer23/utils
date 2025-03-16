@@ -24,9 +24,13 @@ public class WrappingCloseable implements Closeable {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		for (Closeable closeable : closeables) {
-			closeable.close();
+			try {
+				closeable.close();
+			} catch (IOException e) {
+
+			}
 		}
 	}
 }
