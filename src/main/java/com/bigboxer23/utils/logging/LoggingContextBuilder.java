@@ -43,7 +43,16 @@ public class LoggingContextBuilder {
 		return this;
 	}
 
-	public Closeable build() {
+	public LoggingContextBuilder addTraceId() {
+		closeables.add(LoggingUtil.addTraceId());
+		return this;
+	}
+
+	public WrappingCloseable build() {
 		return new WrappingCloseable(closeables);
+	}
+
+	public static LoggingContextBuilder create() {
+		return new LoggingContextBuilder();
 	}
 }
