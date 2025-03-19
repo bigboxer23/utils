@@ -9,6 +9,10 @@ public class RetryingCommandBuilder {
 	private int numberOfRetriesBeforeFailure = 5;
 	private VoidCommand failureCommand = null;
 
+	RetryingCommandBuilder()
+	{
+	}
+
 	public RetryingCommandBuilder identifier(String identifier) {
 		this.identifier = identifier;
 		return this;
