@@ -7,7 +7,7 @@ public class RetryingCommandBuilder {
 	private String identifier = null;
 	private long waitInSeconds = 10;
 	private int numberOfRetriesBeforeFailure = 5;
-	private Command<Void> failureCommand = null;
+	private VoidCommand failureCommand = null;
 
 	public RetryingCommandBuilder identifier(String identifier) {
 		this.identifier = identifier;
@@ -24,7 +24,7 @@ public class RetryingCommandBuilder {
 		return this;
 	}
 
-	public RetryingCommandBuilder failureCommand(Command<Void> failureCommand) {
+	public RetryingCommandBuilder failureCommand(VoidCommand failureCommand) {
 		this.failureCommand = failureCommand;
 		return this;
 	}

@@ -26,7 +26,7 @@ public class RetryingCommand {
 			String identifier,
 			long waitInSeconds,
 			int numberOfRetriesBeforeFailure,
-			Command<Void> failureCommand)
+			VoidCommand failureCommand)
 			throws IOException {
 		try {
 			logger.debug("Starting command " + identifier);
@@ -45,7 +45,11 @@ public class RetryingCommand {
 				} catch (InterruptedException e2) {
 					logger.error("error retrying command " + identifier, e2);
 					if (failureCommand != null) {
-						failureCommand.execute();
+						try {
+							failureCommand.execute();
+						} catch (InterruptedException e3) {
+							logger.error("error failure command " + identifier, e3);
+						}
 					}
 				}
 			}
