@@ -1,5 +1,8 @@
 package com.bigboxer23.utils.logging;
 
+import com.bigboxer23.utils.command.Command;
+import com.bigboxer23.utils.command.VoidCommand;
+import java.io.IOException;
 import java.util.UUID;
 import org.slf4j.MDC;
 
@@ -43,5 +46,17 @@ public class LoggingUtil {
 
 	public static void clearContext() {
 		MDC.clear();
+	}
+
+	public static void runTraced(Command command) throws IOException, InterruptedException {
+		try (WrappingCloseable c = LoggingContextBuilder.create().addTraceId().build()) {
+			command.execute();
+		}
+	}
+
+	public static void runTraced(VoidCommand command) throws IOException, InterruptedException {
+		try (WrappingCloseable c = LoggingContextBuilder.create().addTraceId().build()) {
+			command.execute();
+		}
 	}
 }
