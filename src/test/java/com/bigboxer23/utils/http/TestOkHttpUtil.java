@@ -65,7 +65,7 @@ public class TestOkHttpUtil {
 			server.start();
 			Response response = OkHttpUtil.getSynchronous(server.url("/empty").toString(), null);
 			assertTrue(response.isSuccessful());
-			assertTrue(OkHttpUtil.getBody(response).isPresent());
+			assertFalse(OkHttpUtil.getBody(response).isPresent());
 		}
 	}
 
@@ -98,5 +98,62 @@ public class TestOkHttpUtil {
 	void testCreateBodyFromJsonObject() throws UnsupportedEncodingException {
 		RequestBody body = OkHttpRequestBodyUtils.createBodyFromJsonObject(new TestJson(), TestJson.class);
 		assertNotNull(body);
+	}
+
+	@Test
+	void testGetBodyWithNullResponseReturnsEmpty() {
+		assertFalse(OkHttpUtil.getBody(null).isPresent());
+	}
+
+	@Test
+	void testGetBodyWithInvalidJsonReturnsEmpty() throws IOException {
+		try (MockWebServer server = new MockWebServer()) {
+			server.enqueue(new MockResponse()
+					.setResponseCode(HttpURLConnection.HTTP_OK)
+					.setBody("not-a-json"));
+			server.start();
+			Response response = OkHttpUtil.getSynchronous(server.url("/badjson").toString(), null);
+			Optional<TestJson> parsed = OkHttpUtil.getBody(response, TestJson.class);
+			assertFalse(parsed.isPresent());
+		}
+	}
+
+	@Test
+	void testGetNonEmptyBodyReturnsParsedJson() throws IOException {
+		try (MockWebServer server = new MockWebServer()) {
+			server.enqueue(new MockResponse()
+					.setResponseCode(HttpURLConnection.HTTP_OK)
+					.setBody("{\"key\":\"value\"}"));
+			server.start();
+			Response response =
+					OkHttpUtil.getSynchronous(server.url("/goodjson").toString(), null);
+			TestJson result = OkHttpUtil.getNonEmptyBody(response, TestJson.class);
+			assertNotNull(result);
+			assertEquals("value", result.key);
+		}
+	}
+
+	@Test
+	void testCreateBodyFromJsonObjectHandlesNullInputThrowsException() {
+		assertThrows(
+				IllegalArgumentException.class,
+				() -> OkHttpRequestBodyUtils.createBodyFromJsonObject(null, TestJson.class));
+	}
+
+	@Test
+	void testGetSynchronousInvalidUrlThrows() {
+		assertThrows(IllegalArgumentException.class, () -> OkHttpUtil.getSynchronous("invalid-url", null));
+	}
+
+	@Test
+	void testGetBodyEmptyBodyReturnsEmptyOptional() throws IOException {
+		try (MockWebServer server = new MockWebServer()) {
+			server.enqueue(new MockResponse().setResponseCode(200).setBody(""));
+			server.start();
+			Response response =
+					OkHttpUtil.getSynchronous(server.url("/emptybody").toString(), null);
+			Optional<String> body = OkHttpUtil.getBody(response);
+			assertFalse(body.isPresent());
+		}
 	}
 }
