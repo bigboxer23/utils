@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +19,11 @@ public class TestFilePersistedSet {
 			add("string\nmore complex\nstring");
 		}
 	};
+
+	@AfterAll
+	public static void cleanup() {
+		new FilePersistedSet(TEST_FILE).reset();
+	}
 
 	@BeforeAll
 	public static void classSetup() {
@@ -53,5 +59,15 @@ public class TestFilePersistedSet {
 		set.reset();
 		assertEquals(0, set.size());
 		TEST_DATA.forEach(data -> assertFalse(set.contains(data)));
+	}
+
+	@Test
+	void testFilePersistedSetHandlesDuplicates() {
+		FilePersistedSet set = new FilePersistedSet("testDuplicateSet");
+		set.reset();
+		set.add("dup\nentry");
+		set.add("dup\nentry");
+		assertEquals(1, set.size());
+		assertTrue(set.contains("dup\nentry"));
 	}
 }

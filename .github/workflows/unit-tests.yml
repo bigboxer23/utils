@@ -35,4 +35,4 @@ jobs:
           </settings>
           EOF
       - name: Run Unit Tests
-        run: mvn clean test
+        run: mvn -B clean test --fail-at-end
