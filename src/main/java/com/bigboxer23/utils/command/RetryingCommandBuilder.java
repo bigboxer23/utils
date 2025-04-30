@@ -22,6 +22,9 @@ public class RetryingCommandBuilder {
 	}
 
 	public RetryingCommandBuilder numberOfRetriesBeforeFailure(int numberOfRetriesBeforeFailure) {
+		if (numberOfRetriesBeforeFailure == 0) {
+			throw new IllegalArgumentException("Number of retries before failure is zero.");
+		}
 		this.numberOfRetriesBeforeFailure = numberOfRetriesBeforeFailure;
 		return this;
 	}

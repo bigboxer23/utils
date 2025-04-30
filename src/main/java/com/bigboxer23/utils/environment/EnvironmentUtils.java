@@ -7,6 +7,6 @@ public class EnvironmentUtils {
 	}
 
 	public static double fahrenheitToCelsius(double fahrenheit) {
-		return (fahrenheit - 32) * 1.8;
+		return (fahrenheit - 32f) * (5f / 9f);
 	}
 }
