@@ -143,6 +143,9 @@ public class OkHttpUtil {
 	}
 
 	public static Optional<String> getBody(Response response) {
+		if (response == null) {
+			return Optional.empty();
+		}
 		ResponseBody body = response.body();
 		if (!response.isSuccessful()) {
 			logger.error("request not successful: " + response.code());
@@ -151,7 +154,8 @@ public class OkHttpUtil {
 			return Optional.empty();
 		}
 		try {
-			return Optional.of(body.string());
+			String string = body.string();
+			return string.isEmpty() ? Optional.empty() : Optional.of(string);
 		} catch (IOException theE) {
 			return Optional.empty();
 		}

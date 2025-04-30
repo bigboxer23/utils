@@ -18,7 +18,7 @@ public class OkHttpCallback implements Callback {
 	}
 
 	@Override
-	public final void onResponse(Call call, Response response) throws IOException {
+	public void onResponse(Call call, Response response) throws IOException {
 		try (ResponseBody body = response.body()) {
 			if (!response.isSuccessful()) {
 				throw new IOException("call to " + call.request().url().url() + " failed. " + body.string());
