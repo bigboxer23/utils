@@ -1,5 +1,6 @@
 [![Build Status](https://github.com/bigboxer23/utils/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/bigboxer23/utils/actions/workflows/unit-tests.yml)
 [![CodeQL](https://github.com/bigboxer23/utils/actions/workflows/codeql.yml/badge.svg)](https://github.com/bigboxer23/utils/actions/workflows/codeql.yml)
+[![codecov](https://codecov.io/gh/bigboxer23/utils/branch/main/graph/badge.svg)](https://codecov.io/gh/bigboxer23/utils)
 
 # utils
 
