@@ -27,17 +27,17 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: 11.0
-          distribution: 'adopt'
+          distribution: 'temurin'
+          java-version: '17'
       -   name: maven-settings
           uses: s4u/maven-settings-action@v3.0.0
           with:
             servers: '[{"id": "github", "username": "dummy", "password": "${GITHUB_TOKEN_REF}"}]'
             githubServer: false
-      -   name: Run Tests with Maven
+      -   name: Build for analysis
           run: mvn clean compile -f "pom.xml" -B -V -e -Dfindbugs.skip -Dcheckstyle.skip -Dpmd.skip=true -Dspotbugs.skip -Denforcer.skip -Dmaven.javadoc.skip -DskipTests -Dmaven.test.skip.exec -Dlicense.skip=true -Drat.skip=true -Dspotless.check.skip=true
           env:
             GITHUB_TOKEN_REF: ${{ secrets.GH_PAT_FOR_ACTIONS_TOKEN }}
