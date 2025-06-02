@@ -19,28 +19,55 @@ public class TestOkHttpCallback {
 			server.start();
 			OkHttpClient client = new OkHttpClient();
 
-			CountDownLatch latch = new CountDownLatch(1);
+			CountDownLatch latch = new CountDownLatch(2); // Wait for both async requests
 
 			Request request1 = new Request.Builder().url(server.url("/fail")).build();
 			client.newCall(request1).enqueue(new OkHttpCallback() {
 				@Override
 				public void onFailure(Call call, IOException e) {
-					super.onFailure(call, e);
-					latch.countDown();
+					try {
+						super.onFailure(call, e);
+					} finally {
+						latch.countDown();
+					}
+				}
+
+				@Override
+				public void onResponse(Call call, Response response) throws IOException {
+					try {
+						super.onResponse(call, response);
+						// Check that this is the failed response
+						assertFalse(response.isSuccessful());
+					} finally {
+						latch.countDown();
+					}
 				}
 			});
 
 			Request request2 = new Request.Builder().url(server.url("/success")).build();
 			client.newCall(request2).enqueue(new OkHttpCallback() {
 				@Override
+				public void onFailure(Call call, IOException e) {
+					try {
+						super.onFailure(call, e);
+					} finally {
+						latch.countDown();
+					}
+				}
+
+				@Override
 				public void onResponse(Call call, Response response) throws IOException {
-					super.onResponse(call, response);
-					assertTrue(response.isSuccessful());
-					latch.countDown();
+					try {
+						super.onResponse(call, response);
+						// Check that this is the success response
+						assertTrue(response.isSuccessful());
+					} finally {
+						latch.countDown();
+					}
 				}
 			});
 
-			assertTrue(latch.await(5, TimeUnit.SECONDS));
+			assertTrue(latch.await(5, TimeUnit.SECONDS), "Callbacks did not complete in time");
 		}
 	}
 }
