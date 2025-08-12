@@ -70,4 +70,84 @@ public class TestOkHttpCallback {
 			assertTrue(latch.await(5, TimeUnit.SECONDS), "Callbacks did not complete in time");
 		}
 	}
+
+	@Test
+	void testOkHttpCallbackOnResponseBodyString() throws Exception {
+		try (MockWebServer server = new MockWebServer()) {
+			server.enqueue(new MockResponse().setResponseCode(200).setBody("test response"));
+			server.start();
+
+			CountDownLatch latch = new CountDownLatch(1);
+			String[] capturedBody = {null};
+
+			OkHttpCallback callback = new OkHttpCallback() {
+				@Override
+				public void onResponseBodyString(Call call, String stringBody) {
+					capturedBody[0] = stringBody;
+					latch.countDown();
+				}
+			};
+
+			OkHttpClient client = new OkHttpClient();
+			Request request = new Request.Builder().url(server.url("/test")).build();
+			client.newCall(request).enqueue(callback);
+
+			assertTrue(latch.await(5, TimeUnit.SECONDS), "Callback did not complete in time");
+			assertEquals("test response", capturedBody[0]);
+		}
+	}
+
+	@Test
+	void testOkHttpCallbackOnResponseBodyStringDoesNotThrow() throws Exception {
+		OkHttpCallback callback = new OkHttpCallback();
+		String testBody = "test body content";
+		assertDoesNotThrow(() -> callback.onResponseBodyString(null, testBody));
+	}
+
+	@Test
+	void testOkHttpCallbackOnFailureLogsWarning() {
+		OkHttpCallback callback = new OkHttpCallback();
+		IOException testException = new IOException("Test failure");
+
+		Call mockCall = new Call() {
+			@Override
+			public Request request() {
+				return new Request.Builder().url("http://test.example").build();
+			}
+
+			@Override
+			public Response execute() throws IOException {
+				return null;
+			}
+
+			@Override
+			public void enqueue(Callback responseCallback) {}
+
+			@Override
+			public void cancel() {}
+
+			@Override
+			public boolean isExecuted() {
+				return false;
+			}
+
+			@Override
+			public boolean isCanceled() {
+				return false;
+			}
+
+			@Override
+			public Call clone() {
+				return null;
+			}
+
+			@Override
+			public okio.Timeout timeout() {
+				return null;
+			}
+		};
+
+		// This should not throw, just log the warning
+		assertDoesNotThrow(() -> callback.onFailure(mockCall, testException));
+	}
 }
