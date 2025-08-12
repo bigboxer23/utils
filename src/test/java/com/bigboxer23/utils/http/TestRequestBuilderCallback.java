@@ -23,8 +23,8 @@ public class TestRequestBuilderCallback {
 
 	@Test
 	void testModifyBuilderWithMultipleHeaders() {
-		RequestBuilderCallback callback = builder -> builder.addHeader("Authorization", "Bearer token123")
-				.addHeader("Content-Type", "application/json");
+		RequestBuilderCallback callback = builder ->
+				builder.addHeader("Authorization", "Bearer token123").addHeader("Content-Type", "application/json");
 
 		Request.Builder builder = new Request.Builder().url("http://example.com");
 		Request request = callback.modifyBuilder(builder).build();
@@ -45,7 +45,8 @@ public class TestRequestBuilderCallback {
 
 	@Test
 	void testModifyBuilderWithMethod() {
-		RequestBuilderCallback callback = builder -> builder.post(okhttp3.RequestBody.create("test body", okhttp3.MediaType.parse("text/plain")));
+		RequestBuilderCallback callback =
+				builder -> builder.post(okhttp3.RequestBody.create("test body", okhttp3.MediaType.parse("text/plain")));
 
 		Request.Builder builder = new Request.Builder().url("http://example.com");
 		Request request = callback.modifyBuilder(builder).build();

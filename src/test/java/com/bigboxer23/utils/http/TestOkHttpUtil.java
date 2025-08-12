@@ -156,4 +156,95 @@ public class TestOkHttpUtil {
 			assertFalse(body.isPresent());
 		}
 	}
+
+	@Test
+	void testGetBuilderReturnsConfiguredBuilder() {
+		assertNotNull(OkHttpUtil.getBuilder());
+		assertNotNull(OkHttpUtil.getBuilder().build());
+	}
+
+	@Test
+	void testGetMoshiReturnsSameInstance() {
+		assertNotNull(OkHttpUtil.getMoshi());
+		assertSame(OkHttpUtil.getMoshi(), OkHttpUtil.getMoshi());
+	}
+
+	@Test
+	void testPostSynchronousWithNullBody() throws IOException {
+		try (MockWebServer server = new MockWebServer()) {
+			server.enqueue(new MockResponse().setResponseCode(200).setBody("posted"));
+			server.start();
+			Response response = OkHttpUtil.postSynchronous(server.url("/post").toString(), null, null);
+			assertTrue(response.isSuccessful());
+			assertEquals("posted", OkHttpUtil.getBody(response).orElse(""));
+		}
+	}
+
+	@Test
+	void testPutSynchronousWithNullBody() throws IOException {
+		try (MockWebServer server = new MockWebServer()) {
+			server.enqueue(new MockResponse().setResponseCode(200).setBody("put"));
+			server.start();
+			Response response = OkHttpUtil.putSynchronous(server.url("/put").toString(), null, null);
+			assertTrue(response.isSuccessful());
+			assertEquals("put", OkHttpUtil.getBody(response).orElse(""));
+		}
+	}
+
+	@Test
+	void testDeleteSynchronous() throws IOException {
+		try (MockWebServer server = new MockWebServer()) {
+			server.enqueue(new MockResponse().setResponseCode(204));
+			server.start();
+			try (Response response =
+					OkHttpUtil.deleteSynchronous(server.url("/delete").toString(), null)) {
+				assertEquals(204, response.code());
+			}
+		}
+	}
+
+	@Test
+	void testGetBodyWithClassOnEmptyResponseReturnsEmpty() throws IOException {
+		try (MockWebServer server = new MockWebServer()) {
+			server.enqueue(new MockResponse().setResponseCode(200).setBody(""));
+			server.start();
+			Response response = OkHttpUtil.getSynchronous(server.url("/empty").toString(), null);
+			Optional<TestJson> result = OkHttpUtil.getBody(response, TestJson.class);
+			assertFalse(result.isPresent());
+		}
+	}
+
+	@Test
+	void testGetBodyWithClassOn404ReturnsEmpty() throws IOException {
+		try (MockWebServer server = new MockWebServer()) {
+			server.enqueue(new MockResponse().setResponseCode(404).setBody("{\"key\":\"value\"}"));
+			server.start();
+			Response response =
+					OkHttpUtil.getSynchronous(server.url("/notfound").toString(), null);
+			Optional<TestJson> result = OkHttpUtil.getBody(response, TestJson.class);
+			assertFalse(result.isPresent());
+		}
+	}
+
+	@Test
+	void testRunBuilderCallbackWithNullCallback() throws IOException {
+		try (MockWebServer server = new MockWebServer()) {
+			server.enqueue(new MockResponse().setResponseCode(200).setBody("success"));
+			server.start();
+			Response response = OkHttpUtil.getSynchronous(server.url("/test").toString(), null);
+			assertTrue(response.isSuccessful());
+		}
+	}
+
+	@Test
+	void testGetSynchronousWithCallback() throws IOException {
+		try (MockWebServer server = new MockWebServer()) {
+			server.enqueue(new MockResponse().setResponseCode(200).setBody("with-header"));
+			server.start();
+			Response response = OkHttpUtil.getSynchronous(
+					server.url("/test").toString(), builder -> builder.addHeader("Test-Header", "test-value"));
+			assertTrue(response.isSuccessful());
+			assertEquals("with-header", OkHttpUtil.getBody(response).orElse(""));
+		}
+	}
 }
