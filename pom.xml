@@ -43,12 +43,12 @@
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>
       <artifactId>okhttp-jvm</artifactId>
-      <version>5.1.0</version>
+      <version>5.2.1</version>
     </dependency>
     <dependency>
       <groupId>com.squareup.okio</groupId>
       <artifactId>okio-jvm</artifactId>
-      <version>3.16.0</version>
+      <version>3.16.1</version>
     </dependency>
     <dependency>
       <groupId>com.squareup.moshi</groupId>
@@ -81,7 +81,7 @@
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>
       <artifactId>mockwebserver</artifactId>
-      <version>5.1.0</version>
+      <version>5.2.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -130,7 +130,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.13</version>
+        <version>0.8.14</version>
         <executions>
           <execution>
             <goals>
