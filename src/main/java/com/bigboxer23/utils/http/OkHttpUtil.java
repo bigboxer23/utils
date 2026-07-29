@@ -148,7 +148,7 @@ public class OkHttpUtil {
 		}
 		ResponseBody body = response.body();
 		if (!response.isSuccessful()) {
-			logger.error("request not successful: " + response.code());
+			logger.error("{} request not successful: {}", response.request().url(), response.code());
 		}
 		if (body == null) {
 			return Optional.empty();
@@ -168,13 +168,13 @@ public class OkHttpUtil {
 			return Optional.empty();
 		}
 		if (!response.isSuccessful()) {
-			logger.error("request not successful body: " + body.get());
+			logger.error("{} request not successful body:  {}", response.request().url(), body.get());
 			return Optional.empty();
 		}
 		try {
 			return Optional.ofNullable(getMoshi().adapter(clazz).fromJson(body.get()));
 		} catch (IOException e) {
-			logger.error("getBody: ", e);
+			logger.error("{} getBody: ", response.request().url(), e);
 			return Optional.empty();
 		}
 	}
@@ -182,7 +182,7 @@ public class OkHttpUtil {
 	public static <T> T getNonEmptyBody(Response response, Class<T> clazz) throws IOException {
 		Optional<T> responseBody = getBody(response, clazz);
 		if (!responseBody.isPresent()) {
-			throw new IOException("getBodyChecked: " + response.code() + " " + response.message());
+			throw new IOException("getBodyChecked: " + response.code() + " " + response.message() + " " + response.request().url());
 		}
 		return responseBody.get();
 	}
