@@ -168,7 +168,8 @@ public class OkHttpUtil {
 			return Optional.empty();
 		}
 		if (!response.isSuccessful()) {
-			logger.error("{} request not successful body:  {}", response.request().url(), body.get());
+			logger.error(
+					"{} request not successful body:  {}", response.request().url(), body.get());
 			return Optional.empty();
 		}
 		try {
@@ -182,7 +183,12 @@ public class OkHttpUtil {
 	public static <T> T getNonEmptyBody(Response response, Class<T> clazz) throws IOException {
 		Optional<T> responseBody = getBody(response, clazz);
 		if (!responseBody.isPresent()) {
-			throw new IOException("getBodyChecked: " + response.code() + " " + response.message() + " " + response.request().url());
+			throw new IOException("getBodyChecked: "
+					+ response.code()
+					+ " "
+					+ response.message()
+					+ " "
+					+ response.request().url());
 		}
 		return responseBody.get();
 	}
