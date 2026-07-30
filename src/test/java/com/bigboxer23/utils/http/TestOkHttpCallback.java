@@ -5,13 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import kotlin.jvm.functions.Function0;
-import kotlin.reflect.KClass;
 import okhttp3.*;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 public class TestOkHttpCallback {
@@ -113,65 +109,12 @@ public class TestOkHttpCallback {
 		OkHttpCallback callback = new OkHttpCallback();
 		IOException testException = new IOException("Test failure");
 
-		Call mockCall = new Call() {
-			@NotNull @Override
-			public <T> T tag(@NotNull Class<T> theClass, @NotNull Function0<? extends T> theFunction0) {
-				return null;
-			}
-
-			@NotNull @Override
-			public <T> T tag(@NotNull KClass<T> theKClass, @NotNull Function0<? extends T> theFunction0) {
-				return null;
-			}
-
-			@Nullable @Override
-			public <T> T tag(@NotNull Class<? extends T> theClass) {
-				return null;
-			}
-
-			@Nullable @Override
-			public <T> T tag(@NotNull KClass<T> theKClass) {
-				return null;
-			}
-
-			@Override
-			public Request request() {
-				return new Request.Builder().url("http://test.example").build();
-			}
-
-			@Override
-			public Response execute() throws IOException {
-				return null;
-			}
-
-			@Override
-			public void enqueue(Callback responseCallback) {}
-
-			@Override
-			public void cancel() {}
-
-			@Override
-			public boolean isExecuted() {
-				return false;
-			}
-
-			@Override
-			public boolean isCanceled() {
-				return false;
-			}
-
-			@Override
-			public Call clone() {
-				return null;
-			}
-
-			@Override
-			public okio.Timeout timeout() {
-				return null;
-			}
-		};
+		// Never enqueued or executed, so no network traffic occurs. Using a real Call avoids
+		// re-implementing the interface every time okhttp adds a method to it.
+		Call call = new OkHttpClient()
+				.newCall(new Request.Builder().url("http://test.example").build());
 
 		// This should not throw, just log the warning
-		assertDoesNotThrow(() -> callback.onFailure(mockCall, testException));
+		assertDoesNotThrow(() -> callback.onFailure(call, testException));
 	}
 }
