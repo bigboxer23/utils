@@ -22,3 +22,17 @@ updates:
       major-dependencies:
         update-types:
           - "major"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"
+    groups:
+      minor-patch-dependencies:
+        update-types:
+          - "minor"
+          - "patch"
+      major-dependencies:
+        update-types:
+          - "major"
