@@ -6,6 +6,7 @@ import java.io.IOException;
 public class RetryingCommandBuilder {
 	private String identifier = null;
 	private long waitInSeconds = 10;
+	private long maxWaitInSeconds = RetryingCommand.DEFAULT_MAX_WAIT_IN_SECONDS;
 	private int numberOfRetriesBeforeFailure = 5;
 	private VoidCommand failureCommand = null;
 
@@ -18,6 +19,11 @@ public class RetryingCommandBuilder {
 
 	public RetryingCommandBuilder waitInSeconds(long waitInSeconds) {
 		this.waitInSeconds = waitInSeconds;
+		return this;
+	}
+
+	public RetryingCommandBuilder maxWaitInSeconds(long maxWaitInSeconds) {
+		this.maxWaitInSeconds = maxWaitInSeconds;
 		return this;
 	}
 
@@ -36,6 +42,6 @@ public class RetryingCommandBuilder {
 
 	public <T> T buildAndExecute(Command<T> command) throws IOException {
 		return RetryingCommand.execute(
-				command, identifier, waitInSeconds, numberOfRetriesBeforeFailure, failureCommand);
+				command, identifier, waitInSeconds, maxWaitInSeconds, numberOfRetriesBeforeFailure, failureCommand);
 	}
 }
