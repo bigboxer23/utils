@@ -33,7 +33,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       -   name: maven-settings
-          uses: s4u/maven-settings-action@v3.0.0
+          uses: s4u/maven-settings-action@v4.0.0
           with:
             servers: '[{"id": "github", "username": "dummy", "password": "${GITHUB_TOKEN_REF}"}]'
             githubServer: false
